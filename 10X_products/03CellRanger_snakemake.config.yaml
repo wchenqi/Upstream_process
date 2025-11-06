@@ -1,0 +1,19 @@
+# config/config.yaml
+# 输入输出路径
+indir: "/scratch/2025-11-05/med-wangcq/HanCS/GSE171993/02Rename/"
+outdir: "/scratch/2025-11-05/med-wangcq/HanCS/GSE171993/03Cellranger"
+
+# 参考基因组
+transcriptome: "/data/med-wangcq/01CondaEnv/00DataBase/02genome_annotation/CellRanger/scRNA_STseq/Download/refdata-gex-mm10-2020-A/"
+
+# 资源设置
+jobs: 4
+threads: 9
+mem_gb: 64
+time_hours: 48
+
+# 样本列表（可选，如果自动发现不工作可以手动指定）
+# samples:
+#   - sample1
+#   - sample2
+#   - sample3

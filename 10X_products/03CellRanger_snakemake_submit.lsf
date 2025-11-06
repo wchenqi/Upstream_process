@@ -1,0 +1,48 @@
+#!/bin/bash
+#BSUB -J python
+#BSUB -q short
+#BSUB -n 40
+#BSUB -e %J.err
+#BSUB -o %J.out
+#BSUB -R "span[ptile=40]"
+
+date
+
+hostfile=`echo $LSB_DJOB_HOSTFILE`
+NP=`cat $hostfile | wc -l`
+cd $LS_SUBCWD
+
+# 指定常用参数：
+YAML=/data/med-wangcq/01CondaEnv/02Git_repo/00MyGit_wchenqi/Upstream_process/10X_products/03CellRanger_snakemake.config.yaml
+JOBS=$(yq '.jobs' $YAML)            # 同时运行的任务数
+THREADS=$(yq '.threads' $YAML)      # 每个任务的核心数(线程数)
+# MEM_GB=64        # 每个任务的内存(GB)
+# TIME="48:00:00"  # 预计运行时间
+
+echo "开始Cell Ranger并行分析..."
+echo "并行任务数: ${JOBS}"
+echo "任务占用线程数：${THREADS}"
+echo "开始时间: $(date)"
+
+# 运行Snakemake
+# snakemake \
+#    --cores $(($JOBS * $THREADS)) \
+#    --jobs $JOBS \
+#    --snakefile "/data/med-wangcq/01CondaEnv/02Git_repo/00MyGit_wchenqi/Upstream_process/10X_products/02CellRanger_snakemake_rule.py" \
+#    --latency-wait 30 \
+#    --rerun-incomplete \
+#    --keep-going \
+#    --printshellcmds \
+#    --report report.html > $LSB_JOBID.log 2>&1
+
+# echo "分析完成!"
+# echo "结束时间: $(date)"
+
+snakemake \
+    --cores $(($JOBS * $THREADS)) \
+    --keep-going \
+    --rerun-incomplete \
+    --snakefile "/data/med-wangcq/01CondaEnv/02Git_repo/00MyGit_wchenqi/Upstream_process/10X_products/03CellRanger_snakemake_rule.py" > $LSB_JOBID.log 2>&1
+
+# --unlock
+date
